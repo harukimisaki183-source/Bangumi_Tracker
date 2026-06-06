@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int       @id @default(autoincrement())
+  email          String    @unique
+  password       String
+  nickname       String?
+  avatar         String?
+  gender         String?
+  age            Int?
+  privacy_age    Boolean   @default(false)
+  privacy_gender Boolean   @default(false)
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+
+  works     Work[]
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  favorites Favorite[]
+}
+
+model Work {
+  id             Int       @id @default(autoincrement())
+  name           String
+  type           String
+  rating         Float
+  cover          String
+  description    String?   @db.Text
+  url            String?
+  detail_content Json?
+  author_id      Int
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+
+  author User   @relation(fields: [author_id], references: [id])
+  tags   Tag[]  @relation("WorkTags")
+
+  @@index([author_id])
+  @@index([type])
+  @@index([created_at])
+  @@index([rating])
+}
+
+model Tag {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+
+  works Work[] @relation("WorkTags")
+}
+
+model Post {
+  id         Int       @id @default(autoincrement())
+  content    String    @db.Text
+  images     Json?
+  author_id  Int
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+
+  author    User      @relation(fields: [author_id], references: [id])
+  comments  Comment[]
+  likes     Like[]
+  favorites Favorite[]
+
+  @@index([author_id])
+  @@index([created_at])
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  content    String   @db.Text
+  post_id    Int
+  author_id  Int
+  created_at DateTime @default(now())
+
+  post   Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  author User @relation(fields: [author_id], references: [id])
+
+  @@index([post_id])
+}
+
+model Like {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  post_id    Int
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  post Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, post_id])
+}
+
+model Favorite {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  post_id    Int
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+  post Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, post_id])
+}

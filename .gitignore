@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+*.tsbuildinfo
+.DS_Store
+Thumbs.db
+npm-debug.log*
+.cache/
+.vite/

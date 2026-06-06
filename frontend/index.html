@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-mode="light" data-accent="warm">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#FFF8F0" />
+    <title>追番记录站</title>
+    <!-- Prevent flash of wrong theme: apply stored theme before React mounts -->
+    <script>
+      (function () {
+        try {
+          var stored = JSON.parse(localStorage.getItem('bangumi-theme'));
+          if (stored && stored.state) {
+            document.documentElement.setAttribute('data-mode', stored.state.mode || 'light');
+            document.documentElement.setAttribute('data-accent', stored.state.accent || 'warm');
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.setAttribute('data-mode', 'dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

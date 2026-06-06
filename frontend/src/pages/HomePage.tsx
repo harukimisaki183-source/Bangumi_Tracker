@@ -1,0 +1,272 @@
+import { useEffect, useRef, useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Plus, Search } from 'lucide-react';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { useWorkStore } from '@/stores/workStore';
+import { useAuthStore } from '@/stores/authStore';
+import WorkCard from '@/components/WorkCard';
+import WorkCardSkeleton from '@/components/WorkCardSkeleton';
+
+const tabs = [
+  { value: '', label: '全部', emoji: '✨' },
+  { value: 'movie', label: '电影', emoji: '🎬' },
+  { value: 'series', label: '剧集', emoji: '📺' },
+  { value: 'anime', label: '动漫', emoji: '🌸' },
+];
+
+export default function HomePage() {
+  const { works, isLoading, nextCursor, filters, fetchWorks, loadMore, setFilters } =
+    useWorkStore();
+  const { isAuthenticated } = useAuthStore();
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [activeTab, setActiveTab] = useState(filters.type || '');
+  const [searchFocused, setSearchFocused] = useState(false);
+
+  useEffect(() => {
+    fetchWorks();
+  }, []);
+
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && nextCursor && !isLoading) {
+          loadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observerRef.current.observe(sentinelRef.current);
+    return () => observerRef.current?.disconnect();
+  }, [nextCursor, isLoading, loadMore]);
+
+  const handleTabChange = (type: string) => {
+    setActiveTab(type);
+    const newFilters = { ...filters, type: type || undefined };
+    setFilters(newFilters);
+    fetchWorks(newFilters);
+  };
+
+  const handleSearch = useCallback(
+    debounce((search: string) => {
+      const newFilters = { ...filters, search: search || undefined };
+      setFilters(newFilters);
+      fetchWorks(newFilters);
+    }, 300),
+    [filters]
+  );
+
+  return (
+    <LayoutGroup>
+      <div className="min-h-screen">
+        {/* ── Hero Section ─────────────────────────────────────── */}
+        <section
+          className="relative overflow-hidden py-16 px-4"
+          style={{ background: 'var(--accent-gradient-soft)' }}
+        >
+          {/* Floating decorative orbs */}
+          <motion.div
+            className="absolute w-64 h-64 rounded-full opacity-20 blur-3xl"
+            style={{ background: 'var(--accent)', top: '-4rem', right: '-2rem' }}
+            animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            className="absolute w-48 h-48 rounded-full opacity-15 blur-3xl"
+            style={{ background: 'var(--secondary)', bottom: '-2rem', left: '10%' }}
+            animate={{ y: [0, 15, 0], x: [0, -8, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          />
+
+          <div className="max-w-7xl mx-auto relative z-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+            >
+              <h1
+                className="heading-display text-4xl md:text-5xl mb-3"
+                style={{ color: 'var(--text-primary)' }}
+              >
+                追番记录站
+              </h1>
+              <p
+                className="text-lg max-w-md"
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  color: 'var(--text-secondary)',
+                  lineHeight: 1.6,
+                }}
+              >
+                记录每一次心动的观影体验，发现属于你的作品宇宙
+              </p>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── Toolbar ──────────────────────────────────────────── */}
+        <div className="max-w-7xl mx-auto px-4 -mt-6 relative z-20">
+          <motion.div
+            className="glass rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 250, damping: 25, delay: 0.15 }}
+          >
+            {/* Animated tabs with layoutId indicator */}
+            <div
+              className="flex gap-0.5 p-1 rounded-xl"
+              style={{ background: 'var(--bg-sunken)' }}
+            >
+              {tabs.map((tab) => (
+                <button
+                  key={tab.value}
+                  onClick={() => handleTabChange(tab.value)}
+                  className="relative px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    color:
+                      activeTab === tab.value
+                        ? 'var(--text-primary)'
+                        : 'var(--text-tertiary)',
+                  }}
+                >
+                  {activeTab === tab.value && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute inset-0 rounded-lg"
+                      style={{
+                        background: 'var(--card-bg)',
+                        boxShadow: 'var(--card-shadow)',
+                      }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 400,
+                        damping: 30,
+                      }}
+                    />
+                  )}
+                  <span className="relative z-10 flex items-center gap-1.5">
+                    <span className="text-xs">{tab.emoji}</span>
+                    {tab.label}
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            {/* Search */}
+            <motion.div
+              className="relative flex-1 max-w-sm"
+              animate={{ scale: searchFocused ? 1.02 : 1 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            >
+              <Search
+                className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+                style={{
+                  color: searchFocused ? 'var(--accent)' : 'var(--text-tertiary)',
+                }}
+              />
+              <input
+                onChange={(e) => handleSearch(e.target.value)}
+                placeholder="搜索作品..."
+                onFocus={() => setSearchFocused(true)}
+                onBlur={() => setSearchFocused(false)}
+                className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl transition-all"
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  background: 'var(--bg-sunken)',
+                  border: `1.5px solid ${searchFocused ? 'var(--accent)' : 'var(--border)'}`,
+                  color: 'var(--text-primary)',
+                  outline: 'none',
+                  boxShadow: searchFocused
+                    ? '0 0 0 3px var(--accent-glow)'
+                    : 'none',
+                }}
+              />
+            </motion.div>
+
+            {/* Create button */}
+            {isAuthenticated && (
+              <Link
+                to="/works/create"
+                className="btn-accent flex items-center gap-1.5 shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                创建作品
+              </Link>
+            )}
+          </motion.div>
+        </div>
+
+        {/* ── Masonry Card Grid ────────────────────────────────── */}
+        <div className="max-w-7xl mx-auto px-4 py-10">
+          {works.length === 0 && !isLoading ? (
+            <motion.div
+              className="text-center py-24"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 20 }}
+            >
+              <motion.div
+                className="text-6xl mb-6"
+                animate={{ y: [0, -8, 0] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+              >
+                🎭
+              </motion.div>
+              <p
+                className="text-lg mb-2 heading-section"
+                style={{ color: 'var(--text-secondary)' }}
+              >
+                还没有作品
+              </p>
+              <p
+                className="text-sm mb-6"
+                style={{ color: 'var(--text-tertiary)' }}
+              >
+                创建你的第一个作品，开始记录观影旅程
+              </p>
+              {isAuthenticated && (
+                <Link to="/works/create" className="btn-accent">
+                  去创建第一个作品 →
+                </Link>
+              )}
+            </motion.div>
+          ) : (
+            <motion.div
+              className="masonry-grid"
+              initial="hidden"
+              animate="visible"
+            >
+              <AnimatePresence mode="popLayout">
+                {works.map((work, i) => (
+                  <WorkCard key={work.id} work={work} index={i} />
+                ))}
+              </AnimatePresence>
+
+              {isLoading &&
+                Array.from({ length: 5 }).map((_, i) => (
+                  <WorkCardSkeleton key={`skeleton-${i}`} index={i} />
+                ))}
+            </motion.div>
+          )}
+
+          {/* Infinite scroll sentinel */}
+          {nextCursor && <div ref={sentinelRef} className="h-10" />}
+        </div>
+      </div>
+    </LayoutGroup>
+  );
+}
+
+function debounce<T extends (...args: any[]) => void>(fn: T, ms: number) {
+  let timer: ReturnType<typeof setTimeout>;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), ms);
+  };
+}
