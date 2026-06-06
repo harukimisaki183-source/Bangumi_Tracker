@@ -1,4 +1,6 @@
-﻿services:
+﻿version: "2"
+
+services:
   mysql:
     image: mysql:8.0
     container_name: bangumi-mysql
