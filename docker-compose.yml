@@ -1,25 +1,6 @@
 ﻿version: "2.1"
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: bangumi-mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_CHARSET: utf8mb4
-      MYSQL_COLLATION: utf8mb4_unicode_ci
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   redis:
     image: redis:7-alpine
     container_name: bangumi-redis
@@ -61,11 +42,12 @@ services:
     container_name: bangumi-backend
     restart: unless-stopped
     depends_on:
-      - mysql
       - redis
       - minio
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
-      DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD}@mysql:3306/${MYSQL_DATABASE}
+      DATABASE_URL: mysql://root:${MYSQL_ROOT_PASSWORD}@host.docker.internal:3306/${MYSQL_DATABASE}
       REDIS_HOST: redis
       REDIS_PORT: 6379
       JWT_SECRET: ${JWT_SECRET}
@@ -99,6 +81,5 @@ services:
       - "80:80"
 
 volumes:
-  mysql_data:
   redis_data:
   minio_data:
