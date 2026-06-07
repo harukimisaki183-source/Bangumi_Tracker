@@ -1,5 +1,7 @@
 # Bangumi_Tracker 云服务器部署文档
 
+> 当前版本：v1.0.0 | 最后更新：2026-06-07
+
 ## 服务器信息
 
 | 项目 | 值 |
@@ -145,7 +147,7 @@ server {
     server_name 111.230.114.217;
 
     # 前端静态文件
-    root /root/Bangumi_Tracker/frontend/dist;
+    root /var/www/bangumi;
     index index.html;
 
     # SPA 路由
@@ -219,24 +221,54 @@ sudo systemctl restart redis
 sudo systemctl restart minio
 ```
 
-### 更新部署
+### ⚡ 快速更新（日常部署用这个）
+
+```bash
+cd ~/Bangumi_Tracker && git pull
+
+# ── 仅前端更新（最常见）──
+cd ~/Bangumi_Tracker/frontend
+npm run build
+sudo cp -r dist/* /var/www/bangumi/
+
+# ── 仅后端更新 ──
+cd ~/Bangumi_Tracker/backend
+rm -rf dist tsconfig.tsbuildinfo
+npx tsc --outDir dist
+pm2 restart bangumi-backend
+
+# ── 前后端都更新 ──
+# 先后端（上面3条），再前端（上面2条）
+```
+
+### 数据库迁移（schema 变更时才需要）
+
+```bash
+cd ~/Bangumi_Tracker/backend
+npx prisma migrate deploy
+npx prisma generate
+```
+
+### 完整重建（首次部署或依赖变更时）
 
 ```bash
 cd ~/Bangumi_Tracker
 git pull
 
-# 更新后端
+# 后端
 cd backend
 npm install
 npx prisma migrate deploy
-npm run build
+npx prisma db seed
+rm -rf dist tsconfig.tsbuildinfo
+npx tsc --outDir dist
 pm2 restart bangumi-backend
 
-# 更新前端
+# 前端
 cd ../frontend
 npm install
 npm run build
-# nginx 自动生效，无需重启
+sudo cp -r dist/* /var/www/bangumi/
 ```
 
 ### 数据库操作
@@ -351,3 +383,25 @@ mysql -u root -pbangumi2026 -e "SELECT 1;"
 3. **备份**：建议定期备份数据库和 MinIO 数据
 4. **日志**：关注 pm2 和 nginx 日志，及时发现问题
 5. **更新**：每次代码更新后需重新构建并重启服务
+
+---
+
+## 版本更新日志维护
+
+更新日志显示在前端导航栏的"消息"铃铛中。
+
+**数据文件**：`frontend/src/data/changelog.ts`
+
+每次发布新版本时，在数组**顶部**添加：
+
+```typescript
+{
+  id: 'v1.0.6',
+  date: '2026-06-08',
+  title: '更新标题',
+  description: '详细描述...',
+  type: 'feature',  // 'feature' | 'fix' | 'improvement'
+},
+```
+
+同步更新 `frontend/src/components/NotificationBell.tsx` 中的版本号标签。
