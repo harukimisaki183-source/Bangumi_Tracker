@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/stores/authStore';
 import { Film, Home, Users, User, LogOut, LogIn } from 'lucide-react';
@@ -5,8 +6,14 @@ import { motion } from 'framer-motion';
 import ThemeToggle from '@/components/ThemeToggle';
 
 export default function MainLayout() {
-  const { isAuthenticated, user, logout } = useAuthStore();
+  const { isAuthenticated, user, logout, fetchMe } = useAuthStore();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isAuthenticated && !user) {
+      fetchMe();
+    }
+  }, [isAuthenticated, user, fetchMe]);
 
   const handleLogout = () => {
     logout();
