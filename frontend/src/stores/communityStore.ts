@@ -3,7 +3,7 @@ import api from '@/lib/api';
 
 interface Post {
   id: number; content: string; images: string[]; image_urls: string[];
-  author: { id: number; nickname: string | null; avatar: string | null };
+  author: { id: number; nickname: string | null; avatar: string | null; avatar_url: string | null };
   created_at: string;
   _count: { comments: number; likes: number; favorites: number };
   isLiked?: boolean; isFavorited?: boolean;
