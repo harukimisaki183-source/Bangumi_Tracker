@@ -110,55 +110,69 @@ export default function HomePage() {
         {/* ── Toolbar ──────────────────────────────────────────── */}
         <div className="max-w-7xl mx-auto px-4 -mt-6 relative z-20">
           <motion.div
-            className="glass rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4"
+            className="glass rounded-2xl p-3 sm:p-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: 'spring', stiffness: 250, damping: 25, delay: 0.15 }}
           >
-            {/* Animated tabs with layoutId indicator */}
-            <div
-              className="flex gap-0.5 p-1 rounded-xl"
-              style={{ background: 'var(--bg-sunken)' }}
-            >
-              {tabs.map((tab) => (
-                <button
-                  key={tab.value}
-                  onClick={() => handleTabChange(tab.value)}
-                  className="relative px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    color:
-                      activeTab === tab.value
-                        ? 'var(--text-primary)'
-                        : 'var(--text-tertiary)',
-                  }}
+            {/* Row 1: Tabs + Create button (mobile) */}
+            <div className="flex items-center gap-2 sm:gap-0">
+              {/* Animated tabs with layoutId indicator */}
+              <div
+                className="flex gap-0.5 p-1 rounded-xl overflow-x-auto"
+                style={{ background: 'var(--bg-sunken)' }}
+              >
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.value}
+                    onClick={() => handleTabChange(tab.value)}
+                    className="relative px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors whitespace-nowrap"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      color:
+                        activeTab === tab.value
+                          ? 'var(--text-primary)'
+                          : 'var(--text-tertiary)',
+                    }}
+                  >
+                    {activeTab === tab.value && (
+                      <motion.div
+                        layoutId="activeTab"
+                        className="absolute inset-0 rounded-lg"
+                        style={{
+                          background: 'var(--card-bg)',
+                          boxShadow: 'var(--card-shadow)',
+                        }}
+                        transition={{
+                          type: 'spring',
+                          stiffness: 400,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                    <span className="relative z-10 flex items-center gap-1.5">
+                      <span className="text-xs">{tab.emoji}</span>
+                      {tab.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {/* Create button — inline on mobile */}
+              {isAuthenticated && (
+                <Link
+                  to="/works/create"
+                  className="btn-accent flex items-center gap-1.5 shrink-0 sm:ml-auto text-sm py-2 px-3"
                 >
-                  {activeTab === tab.value && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute inset-0 rounded-lg"
-                      style={{
-                        background: 'var(--card-bg)',
-                        boxShadow: 'var(--card-shadow)',
-                      }}
-                      transition={{
-                        type: 'spring',
-                        stiffness: 400,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                  <span className="relative z-10 flex items-center gap-1.5">
-                    <span className="text-xs">{tab.emoji}</span>
-                    {tab.label}
-                  </span>
-                </button>
-              ))}
+                  <Plus className="w-4 h-4" />
+                  <span className="hidden sm:inline">创建作品</span>
+                </Link>
+              )}
             </div>
 
-            {/* Search */}
+            {/* Row 2 (mobile) / inline (desktop): Search */}
             <motion.div
-              className="relative flex-1 max-w-sm"
+              className="relative flex-1 sm:max-w-sm"
               animate={{ scale: searchFocused ? 1.02 : 1 }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             >
@@ -186,17 +200,6 @@ export default function HomePage() {
                 }}
               />
             </motion.div>
-
-            {/* Create button */}
-            {isAuthenticated && (
-              <Link
-                to="/works/create"
-                className="btn-accent flex items-center gap-1.5 shrink-0"
-              >
-                <Plus className="w-4 h-4" />
-                创建作品
-              </Link>
-            )}
           </motion.div>
         </div>
 

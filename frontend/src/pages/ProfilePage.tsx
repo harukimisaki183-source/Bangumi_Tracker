@@ -128,10 +128,10 @@ export default function ProfilePage() {
             <ArrowLeft className="w-4 h-4" /> 返回
           </button>
         )}
-        <div className="bg-white border rounded-2xl p-6 mb-6">
-          <div className="flex items-start gap-6">
-            <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-3xl font-bold overflow-hidden">
+        <div className="bg-white border rounded-2xl p-4 sm:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
+            <div className="relative shrink-0">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-3xl font-bold overflow-hidden">
                 {profile.avatar_url ? <img src={profile.avatar_url} className="w-full h-full object-cover" /> : (profile.nickname?.[0] || "?")}
               </div>
               {isOwnProfile && (
@@ -141,7 +141,7 @@ export default function ProfilePage() {
                 </label>
               )}
             </div>
-            <div className="flex-1">
+            <div className="flex-1 text-center sm:text-left">
               {editing ? (
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
@@ -177,7 +177,7 @@ export default function ProfilePage() {
                     <span>加入于 {new Date(profile.created_at).toLocaleDateString("zh-CN")}</span>
                   </div>
                   {isOwnProfile && (
-                    <div className="flex gap-2 mt-4">
+                    <div className="flex flex-wrap gap-2 mt-4 justify-center sm:justify-start">
                       <button onClick={() => setEditing(true)} className="px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700">编辑资料</button>
                       <button onClick={() => setShowPasswordForm(!showPasswordForm)} className="flex items-center gap-1 px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-50">
                         <KeyRound className="w-4 h-4" /> 修改密码
