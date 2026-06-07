@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { Film, Home, Users, User, LogOut, LogIn } from 'lucide-react';
 import { motion } from 'framer-motion';
 import ThemeToggle from '@/components/ThemeToggle';
+import NotificationBell from '@/components/NotificationBell';
 
 export default function MainLayout() {
   const { isAuthenticated, user, logout, fetchMe } = useAuthStore();
@@ -81,6 +82,9 @@ export default function MainLayout() {
 
             {/* Theme toggle */}
             <ThemeToggle />
+
+            {/* Notification bell */}
+            <NotificationBell />
 
             {isAuthenticated ? (
               <div className="flex items-center gap-4 pl-3" style={{ borderLeft: '1px solid var(--border)' }}>
