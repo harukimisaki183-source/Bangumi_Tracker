@@ -17,15 +17,17 @@ const tabs = [
 export default function HomePage() {
   const { works, isLoading, nextCursor, filters, fetchWorks, loadMore, setFilters } =
     useWorkStore();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState(filters.type || '');
   const [searchFocused, setSearchFocused] = useState(false);
 
   useEffect(() => {
-    fetchWorks();
-  }, []);
+    if (user?.id) {
+      fetchWorks({ authorId: user.id });
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     if (!sentinelRef.current) return;
@@ -43,18 +45,18 @@ export default function HomePage() {
 
   const handleTabChange = (type: string) => {
     setActiveTab(type);
-    const newFilters = { ...filters, type: type || undefined };
+    const newFilters = { ...filters, type: type || undefined, authorId: user?.id };
     setFilters(newFilters);
     fetchWorks(newFilters);
   };
 
   const handleSearch = useCallback(
     debounce((search: string) => {
-      const newFilters = { ...filters, search: search || undefined };
+      const newFilters = { ...filters, search: search || undefined, authorId: user?.id };
       setFilters(newFilters);
       fetchWorks(newFilters);
     }, 300),
-    [filters]
+    [filters, user?.id]
   );
 
   return (

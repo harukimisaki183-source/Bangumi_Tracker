@@ -20,6 +20,7 @@ interface Filters {
   search?: string;
   sortBy?: string;
   sortOrder?: string;
+  authorId?: number;
 }
 
 interface WorkState {
@@ -50,6 +51,7 @@ export const useWorkStore = create<WorkState>((set, get) => ({
       if (currentFilters.search) params.search = currentFilters.search;
       if (currentFilters.sortBy) params.sortBy = currentFilters.sortBy;
       if (currentFilters.sortOrder) params.sortOrder = currentFilters.sortOrder;
+      if (currentFilters.authorId) params.authorId = currentFilters.authorId;
       if (append && state.nextCursor) params.cursor = state.nextCursor;
 
       const { data } = await api.get('/works', { params });

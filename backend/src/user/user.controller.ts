@@ -35,4 +35,14 @@ export class UserController {
   getPublicProfile(@Param('id') id: string) {
     return this.userService.getPublicProfile(+id);
   }
+
+  @Get(':id/works')
+  getPublicWorks(@Param('id') id: string, @Query('page') page?: string, @Query('limit') limit?: string) {
+    return this.userService.getMyWorks(+id, page ? +page : 1, limit ? +limit : 20);
+  }
+
+  @Get(':id/posts')
+  getPublicPosts(@Param('id') id: string, @Query('page') page?: string, @Query('limit') limit?: string) {
+    return this.userService.getMyPosts(+id, page ? +page : 1, limit ? +limit : 20);
+  }
 }
