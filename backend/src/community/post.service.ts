@@ -9,10 +9,11 @@ export class PostService {
 
   async create(userId: number, dto: CreatePostDto) {
     if (dto.images && dto.images.length > 9) throw new HttpException('最多上传9张图片', HttpStatus.BAD_REQUEST);
-    return this.prisma.post.create({
+    const post = await this.prisma.post.create({
       data: { content: dto.content, images: dto.images || [], author_id: userId },
       include: { author: { select: { id: true, nickname: true, avatar: true } } },
     });
+    return this.appendAuthorAvatarUrl(this.appendImageUrls(post));
   }
 
   async findAll(cursor?: number, limit = 20) {
@@ -23,7 +24,7 @@ export class PostService {
       include: { author: { select: { id: true, nickname: true, avatar: true } }, _count: { select: { comments: true, likes: true, favorites: true } } },
     });
     const nextCursor = posts.length === limit ? posts[posts.length - 1].id : null;
-    return { posts: posts.map((p) => this.appendImageUrls(p)), nextCursor };
+    return { posts: posts.map((p) => this.appendAuthorAvatarUrl(this.appendImageUrls(p))), nextCursor };
   }
 
   async findOne(id: number, userId?: number) {
@@ -32,7 +33,10 @@ export class PostService {
       include: { author: { select: { id: true, nickname: true, avatar: true } }, comments: { include: { author: { select: { id: true, nickname: true, avatar: true } } }, orderBy: { created_at: 'asc' } }, _count: { select: { likes: true, favorites: true } } },
     });
     if (!post) throw new HttpException('帖子不存在', HttpStatus.NOT_FOUND);
-    const result: any = this.appendImageUrls(post);
+    const result: any = this.appendAuthorAvatarUrl(this.appendImageUrls(post));
+    if (result.comments) {
+      result.comments = result.comments.map((c: any) => this.appendAuthorAvatarUrl(c));
+    }
     if (userId) {
       result.isLiked = !!(await this.prisma.like.findUnique({ where: { user_id_post_id: { user_id: userId, post_id: id } } }));
       result.isFavorited = !!(await this.prisma.favorite.findUnique({ where: { user_id_post_id: { user_id: userId, post_id: id } } }));
@@ -68,11 +72,18 @@ export class PostService {
       this.prisma.post.findMany({ where: { author_id: userId }, orderBy: { created_at: 'desc' }, skip, take: limit, include: { author: { select: { id: true, nickname: true, avatar: true } }, _count: { select: { comments: true, likes: true, favorites: true } } } }),
       this.prisma.post.count({ where: { author_id: userId } }),
     ]);
-    return { posts: posts.map((p) => this.appendImageUrls(p)), total, page, totalPages: Math.ceil(total / limit) };
+    return { posts: posts.map((p) => this.appendAuthorAvatarUrl(this.appendImageUrls(p))), total, page, totalPages: Math.ceil(total / limit) };
   }
 
   private appendImageUrls(post: any) {
     if (post.images && Array.isArray(post.images)) post.image_urls = post.images.map((key) => this.uploadService.getPublicUrl(key));
     return post;
+  }
+
+  private appendAuthorAvatarUrl(item: any) {
+    if (item.author) {
+      item.author.avatar_url = item.author.avatar ? this.uploadService.getPublicUrl(item.author.avatar) : null;
+    }
+    return item;
   }
 }

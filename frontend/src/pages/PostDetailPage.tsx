@@ -57,7 +57,7 @@ export default function PostDetailPage() {
           <div className="flex items-center gap-3 mb-4">
             <Link to={`/profile/${post.author.id}`}>
               <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-lg">
-                {post.author.avatar ? <img src={post.author.avatar} className="w-full h-full rounded-full object-cover" /> : (post.author.nickname?.[0] || '?')}
+                {post.author.avatar_url ? <img src={post.author.avatar_url} className="w-full h-full rounded-full object-cover" /> : (post.author.nickname?.[0] || '?')}
               </div>
             </Link>
             <div>
@@ -87,12 +87,14 @@ export default function PostDetailPage() {
           <div className="space-y-4 mb-6">
             {post.comments?.map((c: any) => (
               <div key={c.id} className="flex gap-3">
-                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-500">
-                  {c.author.avatar ? <img src={c.author.avatar} className="w-full h-full rounded-full object-cover" /> : (c.author.nickname?.[0] || '?')}
-                </div>
+                <Link to={`/profile/${c.author.id}`}>
+                  <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs text-gray-500">
+                    {c.author.avatar_url ? <img src={c.author.avatar_url} className="w-full h-full rounded-full object-cover" /> : (c.author.nickname?.[0] || '?')}
+                  </div>
+                </Link>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{c.author.nickname || '匿名'}</span>
+                    <Link to={`/profile/${c.author.id}`} className="text-sm font-medium hover:text-indigo-600">{c.author.nickname || '匿名'}</Link>
                     <span className="text-xs text-gray-400">{new Date(c.created_at).toLocaleString('zh-CN')}</span>
                   </div>
                   <p className="text-sm text-gray-700 mt-1">{c.content}</p>

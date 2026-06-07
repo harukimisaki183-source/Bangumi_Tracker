@@ -13,7 +13,10 @@ export class UserService {
       select: { id: true, email: true, nickname: true, avatar: true, gender: true, age: true, privacy_age: true, privacy_gender: true, created_at: true },
     });
     if (!user) throw new HttpException('用户不存在', HttpStatus.NOT_FOUND);
-    return user;
+    return {
+      ...user,
+      avatar_url: user.avatar ? this.uploadService.getPublicUrl(user.avatar) : null,
+    };
   }
 
   async getPublicProfile(userId: number) {
@@ -23,7 +26,9 @@ export class UserService {
     });
     if (!user) throw new HttpException('用户不存在', HttpStatus.NOT_FOUND);
     return {
-      id: user.id, nickname: user.nickname, avatar: user.avatar,
+      id: user.id, nickname: user.nickname,
+      avatar: user.avatar,
+      avatar_url: user.avatar ? this.uploadService.getPublicUrl(user.avatar) : null,
       gender: user.privacy_gender ? null : user.gender,
       age: user.privacy_age ? null : user.age,
       created_at: user.created_at,

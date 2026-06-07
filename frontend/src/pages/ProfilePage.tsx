@@ -63,7 +63,7 @@ export default function ProfilePage() {
       formData.append("file", file);
       const { data } = await api.post("/upload/file", formData);
       await api.patch("/users/me", { avatar: data.data.key });
-      setProfile((p: any) => ({ ...p, avatar: data.data.url }));
+      setProfile((p: any) => ({ ...p, avatar: data.data.key, avatar_url: data.data.url }));
       toast.success("头像更新成功");
       fetchMe();
     } catch { toast.error("上传失败"); }
@@ -132,7 +132,7 @@ export default function ProfilePage() {
           <div className="flex items-start gap-6">
             <div className="relative">
               <div className="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 text-3xl font-bold overflow-hidden">
-                {profile.avatar ? <img src={profile.avatar} className="w-full h-full object-cover" /> : (profile.nickname?.[0] || "?")}
+                {profile.avatar_url ? <img src={profile.avatar_url} className="w-full h-full object-cover" /> : (profile.nickname?.[0] || "?")}
               </div>
               {isOwnProfile && (
                 <label className="absolute bottom-0 right-0 w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-indigo-700">

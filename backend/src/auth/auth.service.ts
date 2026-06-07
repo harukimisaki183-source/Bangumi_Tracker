@@ -6,6 +6,7 @@ import * as nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
 import { PrismaService } from '../prisma/prisma.service';
 import { RedisService } from '../redis/redis.service';
+import { UploadService } from '../upload/upload.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -20,6 +21,7 @@ export class AuthService {
     private redis: RedisService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private uploadService: UploadService,
   ) {
     this.transporter = nodemailer.createTransport({
       host: configService.get('SMTP_HOST', 'smtp.qq.com'),
@@ -164,6 +166,7 @@ export class AuthService {
         email: user.email,
         nickname: user.nickname,
         avatar: user.avatar,
+        avatar_url: user.avatar ? this.uploadService.getPublicUrl(user.avatar) : null,
       },
     };
   }

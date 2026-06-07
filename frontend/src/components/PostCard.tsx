@@ -22,7 +22,7 @@ export default function PostCard({ post }: PostCardProps) {
       <div className="flex items-center gap-3 mb-3">
         <Link to={`/profile/${post.author.id}`}>
           <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-            {post.author.avatar ? <img src={post.author.avatar} className="w-full h-full rounded-full object-cover" /> : (post.author.nickname?.[0] || '?')}
+            {post.author.avatar_url ? <img src={post.author.avatar_url} className="w-full h-full rounded-full object-cover" /> : (post.author.nickname?.[0] || '?')}
           </div>
         </Link>
         <div>
