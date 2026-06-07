@@ -6,7 +6,7 @@ import { useCommunityStore } from '@/stores/communityStore';
 interface PostCardProps {
   post: {
     id: number; content: string; image_urls?: string[];
-    author: { id: number; nickname: string | null; avatar: string | null };
+    author: { id: number; nickname: string | null; avatar: string | null; avatar_url: string | null };
     created_at: string;
     _count: { comments: number; likes: number; favorites: number };
     isLiked?: boolean; isFavorited?: boolean;
