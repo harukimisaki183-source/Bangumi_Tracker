@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import api from '@/lib/api';
+﻿import { create } from "zustand";
+import api from "@/lib/api";
 
 interface Post {
   id: number; content: string; images: string[]; image_urls: string[];
@@ -16,6 +16,7 @@ interface CommunityState {
   toggleLike: (postId: number) => Promise<void>;
   toggleFavorite: (postId: number) => Promise<void>;
   addPost: (post: Post) => void;
+  deletePost: (postId: number) => Promise<void>;
 }
 
 export const useCommunityStore = create<CommunityState>((set, get) => ({
@@ -27,7 +28,7 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
     try {
       const params: any = { limit: 20 };
       if (append && state.nextCursor) params.cursor = state.nextCursor;
-      const { data } = await api.get('/posts', { params });
+      const { data } = await api.get("/posts", { params });
       const { posts, nextCursor } = data.data;
       set({ posts: append ? [...state.posts, ...posts] : posts, nextCursor, isLoading: false });
     } catch { set({ isLoading: false }); }
@@ -58,4 +59,9 @@ export const useCommunityStore = create<CommunityState>((set, get) => ({
   },
 
   addPost: (post) => set((s) => ({ posts: [post, ...s.posts] })),
+
+  deletePost: async (postId) => {
+    await api.delete(`/posts/${postId}`);
+    set((s) => ({ posts: s.posts.filter((p) => p.id !== postId) }));
+  },
 }));
