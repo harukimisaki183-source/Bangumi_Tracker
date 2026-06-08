@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export type ColorMode = 'light' | 'dark';
-export type AccentScheme = 'warm' | 'cool';
+export type AccentScheme = 'warm' | 'cool' | 'scrapbook';
 
 interface ThemeState {
   mode: ColorMode;
@@ -36,7 +36,9 @@ export const useThemeStore = create<ThemeState>()(
       },
 
       toggleAccent: () => {
-        const next = get().accent === 'warm' ? 'cool' : 'warm';
+        const cycle: AccentScheme[] = ['warm', 'cool', 'scrapbook'];
+        const idx = cycle.indexOf(get().accent);
+        const next = cycle[(idx + 1) % cycle.length];
         set({ accent: next });
         applyTheme(get().mode, next);
       },
@@ -63,8 +65,10 @@ function applyTheme(mode: ColorMode, accent: AccentScheme) {
   const colors: Record<string, string> = {
     'light-warm': '#FFF8F0',
     'light-cool': '#F0F7FA',
+    'light-scrapbook': '#FDF6EC',
     'dark-warm': '#1A1019',
     'dark-cool': '#0F1A2E',
+    'dark-scrapbook': '#1C1915',
   };
   if (metaThemeColor) {
     metaThemeColor.setAttribute('content', colors[`${mode}-${accent}`]);

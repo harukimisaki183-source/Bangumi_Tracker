@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion';
-import type { ReactNode } from 'react';
+﻿import { motion } from "framer-motion";
+import type { ReactNode } from "react";
+import { useThemeStore } from "@/stores/themeStore";
 
 interface GlassSectionProps {
   icon: ReactNode;
@@ -14,15 +15,15 @@ const sectionVariants = {
     opacity: 0,
     y: 30,
     scale: 0.97,
-    filter: 'blur(6px)',
+    filter: "blur(6px)",
   },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     scale: 1,
-    filter: 'blur(0px)',
+    filter: "blur(0px)",
     transition: {
-      type: 'spring' as const,
+      type: "spring" as const,
       stiffness: 220,
       damping: 26,
       mass: 0.9,
@@ -38,38 +39,46 @@ export default function GlassSection({
   children,
   accentVar,
 }: GlassSectionProps) {
+  const accent = useThemeStore((s) => s.accent);
+  const isScrapbook = accent === "scrapbook";
+
   return (
     <motion.section
       variants={sectionVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-60px' }}
+      viewport={{ once: true, margin: "-60px" }}
       custom={index}
-      className="glass-strong relative overflow-hidden"
+      className={isScrapbook ? "scrapbook-section relative overflow-hidden" : "glass-strong relative overflow-hidden"}
       style={{
-        borderRadius: 'var(--radius-glass)',
-        padding: '1.75rem',
+        borderRadius: isScrapbook ? "0.75rem" : "var(--radius-glass)",
+        padding: "1.75rem",
       }}
     >
-      {/* Decorative gradient blob */}
-      <div
-        className="absolute -top-12 -right-12 w-40 h-40 rounded-full opacity-30 blur-3xl pointer-events-none"
-        style={{ background: accentVar || 'var(--accent)' }}
-      />
+      {/* Decorative gradient blob (not in scrapbook) */}
+      {!isScrapbook && (
+        <div
+          className="absolute -top-12 -right-12 w-40 h-40 rounded-full opacity-30 blur-3xl pointer-events-none"
+          style={{ background: accentVar || "var(--accent)" }}
+        />
+      )}
 
       {/* Section header */}
       <div className="flex items-center gap-3 mb-5 relative z-10">
         <div
           className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
           style={{
-            background: accentVar ? `${accentVar}20` : 'var(--accent-soft)',
+            background: isScrapbook
+              ? `color-mix(in srgb, ${accentVar || "var(--accent)"} 15%, transparent)`
+              : accentVar ? `${accentVar}20` : "var(--accent-soft)",
+            border: isScrapbook ? `1.5px solid ${accentVar || "var(--border)"}` : undefined,
           }}
         >
-          <span style={{ color: accentVar || 'var(--accent)' }}>{icon}</span>
+          <span style={{ color: accentVar || "var(--accent)" }}>{icon}</span>
         </div>
         <h2
           className="heading-section text-lg"
-          style={{ color: 'var(--text-primary)' }}
+          style={{ color: "var(--text-primary)" }}
         >
           {title}
         </h2>

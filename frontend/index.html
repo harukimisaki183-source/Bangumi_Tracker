@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN" data-mode="light" data-accent="warm">
   <head>
     <meta charset="UTF-8" />
@@ -13,7 +13,12 @@
           var stored = JSON.parse(localStorage.getItem('bangumi-theme'));
           if (stored && stored.state) {
             document.documentElement.setAttribute('data-mode', stored.state.mode || 'light');
-            document.documentElement.setAttribute('data-accent', stored.state.accent || 'warm');
+            var accent = stored.state.accent || 'warm';
+            if (accent === 'warm' || accent === 'cool' || accent === 'scrapbook') {
+              document.documentElement.setAttribute('data-accent', accent);
+            } else {
+              document.documentElement.setAttribute('data-accent', 'warm');
+            }
           } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.setAttribute('data-mode', 'dark');
           }
@@ -26,3 +31,4 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
+

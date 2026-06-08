@@ -1,16 +1,20 @@
-import { useEffect, useState } from 'react';
-import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuthStore } from '@/stores/authStore';
-import { Film, Home, Users, User, LogOut, LogIn, Menu, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import ThemeToggle from '@/components/ThemeToggle';
-import NotificationBell from '@/components/NotificationBell';
+﻿import { useEffect, useState } from "react";
+import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuthStore } from "@/stores/authStore";
+import { Film, Home, Users, User, LogOut, LogIn, Menu, X, Settings } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import ThemeToggle from "@/components/ThemeToggle";
+import NotificationBell from "@/components/NotificationBell";
+import SettingsDialog from "@/components/SettingsDialog";
+import { useTranslation } from "@/stores/i18nStore";
 
 export default function MainLayout() {
   const { isAuthenticated, user, logout, fetchMe } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (isAuthenticated && !user) {
@@ -18,7 +22,6 @@ export default function MainLayout() {
     }
   }, [isAuthenticated, user, fetchMe]);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
@@ -26,45 +29,37 @@ export default function MainLayout() {
   const handleLogout = () => {
     logout();
     setMobileMenuOpen(false);
-    navigate('/login');
+    navigate("/login");
   };
 
   const navLinks = [
-    { to: '/', icon: Home, label: '首页' },
-    { to: '/community', icon: Users, label: '社区' },
+    { to: "/", icon: Home, label: t("nav.home") },
+    { to: "/community", icon: Users, label: t("nav.community") },
   ];
 
   return (
     <div className="min-h-screen flex flex-col noise">
-      {/* ── Navigation ────────────────────────────────────────── */}
       <nav
         className="sticky top-0 z-50 glass"
         style={{
-          background: 'var(--nav-bg)',
-          borderColor: 'var(--nav-border)',
-          borderBottom: '1px solid var(--nav-border)',
+          background: "var(--nav-bg)",
+          borderColor: "var(--nav-border)",
+          borderBottom: "1px solid var(--nav-border)",
         }}
       >
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-          {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
             <motion.div
               whileHover={{ rotate: 8 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+              transition={{ type: "spring", stiffness: 300, damping: 22 }}
             >
-              <Film
-                className="w-6 h-6"
-                style={{ color: 'var(--accent)' }}
-              />
+              <Film className="w-6 h-6" style={{ color: "var(--accent)" }} />
             </motion.div>
-            <span
-              className="heading-section text-xl text-gradient"
-            >
-              追番记录站
+            <span className="heading-section text-xl text-gradient">
+              {t("nav.siteName")}
             </span>
           </Link>
 
-          {/* Desktop nav links */}
           <div className="hidden md:flex items-center gap-5">
             {navLinks.map((link) => (
               <Link
@@ -72,15 +67,13 @@ export default function MainLayout() {
                 to={link.to}
                 className="flex items-center gap-1.5 text-sm font-medium transition-colors"
                 style={{
-                  fontFamily: 'var(--font-display)',
-                  color: location.pathname === link.to
-                    ? 'var(--accent)'
-                    : 'var(--text-secondary)',
+                  fontFamily: "var(--font-display)",
+                  color: location.pathname === link.to ? "var(--accent)" : "var(--text-secondary)",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+                onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
                 onMouseLeave={(e) =>
                   (e.currentTarget.style.color =
-                    location.pathname === link.to ? 'var(--accent)' : 'var(--text-secondary)')
+                    location.pathname === link.to ? "var(--accent)" : "var(--text-secondary)")
                 }
               >
                 <link.icon className="w-4 h-4" />
@@ -88,70 +81,80 @@ export default function MainLayout() {
               </Link>
             ))}
 
-            {/* Theme toggle */}
             <ThemeToggle />
-
-            {/* Notification bell */}
             <NotificationBell />
 
+            <motion.button
+              onClick={() => setSettingsOpen(true)}
+              className="relative w-9 h-9 rounded-xl flex items-center justify-center"
+              style={{
+                background: "var(--bg-muted)",
+                border: "1px solid var(--border)",
+                color: "var(--text-secondary)",
+              }}
+              whileHover={{ scale: 1.08, color: "var(--accent)" }}
+              whileTap={{ scale: 0.92 }}
+              aria-label={t("settings.title")}
+            >
+              <Settings className="w-4 h-4" />
+            </motion.button>
+
             {isAuthenticated ? (
-              <div className="flex items-center gap-4 pl-3" style={{ borderLeft: '1px solid var(--border)' }}>
+              <div className="flex items-center gap-4 pl-3" style={{ borderLeft: "1px solid var(--border)" }}>
                 <Link
                   to="/profile"
                   className="flex items-center gap-1.5 text-sm font-medium transition-colors"
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    color: 'var(--text-secondary)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                  style={{ fontFamily: "var(--font-display)", color: "var(--text-secondary)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
                 >
                   <User className="w-4 h-4" />
-                  {user?.nickname || '个人中心'}
+                  {user?.nickname || t("nav.profile")}
                 </Link>
                 <motion.button
                   onClick={handleLogout}
                   className="flex items-center gap-1.5 text-sm font-medium transition-colors"
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    color: 'var(--text-tertiary)',
-                  }}
-                  whileHover={{ color: 'var(--error)' }}
+                  style={{ fontFamily: "var(--font-display)", color: "var(--text-tertiary)" }}
+                  whileHover={{ color: "var(--error)" }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <LogOut className="w-4 h-4" />
-                  登出
+                  {t("nav.logout")}
                 </motion.button>
               </div>
             ) : (
-              <div className="flex items-center gap-3 pl-3" style={{ borderLeft: '1px solid var(--border)' }}>
+              <div className="flex items-center gap-3 pl-3" style={{ borderLeft: "1px solid var(--border)" }}>
                 <Link
                   to="/login"
                   className="flex items-center gap-1.5 text-sm font-medium transition-colors"
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    color: 'var(--text-secondary)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                  style={{ fontFamily: "var(--font-display)", color: "var(--text-secondary)" }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-secondary)")}
                 >
                   <LogIn className="w-4 h-4" />
-                  登录
+                  {t("nav.login")}
                 </Link>
                 <Link to="/register" className="btn-accent">
-                  注册
+                  {t("nav.register")}
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Mobile: notification + hamburger */}
           <div className="flex md:hidden items-center gap-3">
             <NotificationBell />
             <motion.button
+              onClick={() => setSettingsOpen(true)}
+              className="w-9 h-9 flex items-center justify-center rounded-lg"
+              style={{ color: "var(--text-secondary)" }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Settings className="w-5 h-5" />
+            </motion.button>
+            <motion.button
               onClick={() => setMobileMenuOpen((v) => !v)}
               className="w-9 h-9 flex items-center justify-center rounded-lg"
-              style={{ color: 'var(--text-secondary)' }}
+              style={{ color: "var(--text-secondary)" }}
               whileTap={{ scale: 0.9 }}
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -160,91 +163,70 @@ export default function MainLayout() {
         </div>
       </nav>
 
-      {/* ── Mobile Menu Overlay ───────────────────────────────── */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-            {/* Backdrop */}
             <motion.div
               className="fixed inset-0 z-40 md:hidden"
-              style={{ background: 'var(--overlay)' }}
+              style={{ background: "var(--overlay)" }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
             />
-
-            {/* Drawer */}
             <motion.div
               className="fixed top-16 right-0 bottom-0 z-50 w-64 md:hidden overflow-y-auto"
               style={{
-                background: 'var(--bg-elevated)',
-                borderLeft: '1px solid var(--border)',
-                boxShadow: '-8px 0 32px rgba(0,0,0,0.1)',
+                background: "var(--bg-elevated)",
+                borderLeft: "1px solid var(--border)",
+                boxShadow: "-8px 0 32px rgba(0,0,0,0.1)",
               }}
-              initial={{ x: '100%' }}
+              initial={{ x: "100%" }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
               <div className="flex flex-col p-4 gap-1">
-                {/* Nav links */}
                 {navLinks.map((link) => (
                   <Link
                     key={link.to}
                     to={link.to}
                     className="flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors"
                     style={{
-                      fontFamily: 'var(--font-display)',
-                      color: location.pathname === link.to ? 'var(--accent)' : 'var(--text-secondary)',
-                      background: location.pathname === link.to ? 'var(--accent-soft)' : 'transparent',
+                      fontFamily: "var(--font-display)",
+                      color: location.pathname === link.to ? "var(--accent)" : "var(--text-secondary)",
+                      background: location.pathname === link.to ? "var(--accent-soft)" : "transparent",
                     }}
                   >
                     <link.icon className="w-5 h-5" />
                     {link.label}
                   </Link>
                 ))}
-
-                {/* Divider */}
-                <div className="my-2" style={{ borderTop: '1px solid var(--border)' }} />
-
-                {/* Theme toggle */}
+                <div className="my-2" style={{ borderTop: "1px solid var(--border)" }} />
                 <div className="px-3 py-3 flex items-center justify-between">
-                  <span
-                    className="text-sm font-medium"
-                    style={{ fontFamily: 'var(--font-display)', color: 'var(--text-secondary)' }}
-                  >
-                    主题设置
+                  <span className="text-sm font-medium" style={{ fontFamily: "var(--font-display)", color: "var(--text-secondary)" }}>
+                    {t("settings.theme")}
                   </span>
                   <ThemeToggle />
                 </div>
-
-                {/* Divider */}
-                <div className="my-2" style={{ borderTop: '1px solid var(--border)' }} />
-
+                <div className="my-2" style={{ borderTop: "1px solid var(--border)" }} />
                 {isAuthenticated ? (
                   <>
                     <Link
                       to="/profile"
                       className="flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors"
-                      style={{
-                        fontFamily: 'var(--font-display)',
-                        color: 'var(--text-secondary)',
-                      }}
+                      style={{ fontFamily: "var(--font-display)", color: "var(--text-secondary)" }}
                     >
                       <User className="w-5 h-5" />
-                      {user?.nickname || '个人中心'}
+                      {user?.nickname || t("nav.profile")}
                     </Link>
                     <button
                       onClick={handleLogout}
                       className="flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors w-full text-left"
-                      style={{
-                        fontFamily: 'var(--font-display)',
-                        color: 'var(--error)',
-                      }}
+                      style={{ fontFamily: "var(--font-display)", color: "var(--error)" }}
                     >
                       <LogOut className="w-5 h-5" />
-                      登出
+                      {t("nav.logout")}
                     </button>
                   </>
                 ) : (
@@ -252,19 +234,13 @@ export default function MainLayout() {
                     <Link
                       to="/login"
                       className="flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors"
-                      style={{
-                        fontFamily: 'var(--font-display)',
-                        color: 'var(--text-secondary)',
-                      }}
+                      style={{ fontFamily: "var(--font-display)", color: "var(--text-secondary)" }}
                     >
                       <LogIn className="w-5 h-5" />
-                      登录
+                      {t("nav.login")}
                     </Link>
-                    <Link
-                      to="/register"
-                      className="btn-accent text-center mt-2"
-                    >
-                      注册
+                    <Link to="/register" className="btn-accent text-center mt-2">
+                      {t("nav.register")}
                     </Link>
                   </>
                 )}
@@ -274,7 +250,8 @@ export default function MainLayout() {
         )}
       </AnimatePresence>
 
-      {/* ── Main content ──────────────────────────────────────── */}
+      <SettingsDialog open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+
       <main className="flex-1">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -285,16 +262,12 @@ export default function MainLayout() {
         </motion.div>
       </main>
 
-      {/* ── Footer ────────────────────────────────────────────── */}
       <footer
         className="py-8 text-center"
-        style={{
-          borderTop: '1px solid var(--border)',
-          color: 'var(--text-tertiary)',
-        }}
+        style={{ borderTop: "1px solid var(--border)", color: "var(--text-tertiary)" }}
       >
-        <p className="text-sm" style={{ fontFamily: 'var(--font-display)' }}>
-          © 2026 追番记录站 — 记录你的每一次观影体验
+        <p className="text-sm" style={{ fontFamily: "var(--font-display)" }}>
+          {t("footer.copyright")}
         </p>
       </footer>
     </div>

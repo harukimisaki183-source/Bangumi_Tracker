@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap');
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -276,6 +276,134 @@
   --star-empty: #2A4060;
 
   --overlay: rgb(0 0 0 / 0.65);
+}
+
+/* -- Light + Scrapbook (手账拼贴风) ----------------------------------- */
+[data-mode="light"][data-accent="scrapbook"] {
+  --bg-base: #FDF6EC;
+  --bg-elevated: #FFFCF5;
+  --bg-sunken: #F5EBD9;
+  --bg-muted: #F0E6D4;
+
+  --text-primary: #2C1810;
+  --text-secondary: #5C4A3E;
+  --text-tertiary: #8B7D72;
+  --text-inverse: #FFFCF5;
+
+  --accent: #C94C4C;
+  --accent-hover: #B33E3E;
+  --accent-soft: #FADEDE;
+  --accent-muted: #F0C4C4;
+  --accent-glow: rgb(201 76 76 / 0.18);
+  --accent-gradient: linear-gradient(135deg, #C94C4C 0%, #D4A574 100%);
+  --accent-gradient-soft: linear-gradient(135deg, #FADEDE 0%, #FFE8D6 100%);
+
+  --secondary: #5B9BD5;
+  --secondary-soft: #D6E8F5;
+
+  --border: #E0D5C4;
+  --border-hover: #C8BBA8;
+  --border-accent: #F0C4C4;
+
+  --ring: #C94C4C;
+  --ring-offset: #FDF6EC;
+
+  --glass-bg: rgb(255 252 245 / 0.7);
+  --glass-border: rgb(255 252 245 / 0.5);
+  --glass-shadow: 0 8px 32px -8px rgb(201 76 76 / 0.06);
+
+  --card-bg: #FFFCF5;
+  --card-border: #E0D5C4;
+  --card-shadow: 0 2px 12px -2px rgb(44 24 16 / 0.08), 0 1px 4px -1px rgb(44 24 16 / 0.04);
+  --card-shadow-hover: 0 12px 28px -4px rgb(44 24 16 / 0.12), 0 4px 12px -2px rgb(44 24 16 / 0.06);
+
+  --nav-bg: rgb(253 246 236 / 0.88);
+  --nav-border: #E0D5C4;
+
+  --success: #6B9E6B;
+  --warning: #D4A040;
+  --error: #C94C4C;
+  --info: #5B9BD5;
+
+  --skeleton-base: #E8DDD0;
+  --skeleton-shine: #F5EBD9;
+
+  --star-filled: #D4A040;
+  --star-empty: #D4C8B8;
+
+  --overlay: rgb(44 24 16 / 0.35);
+
+  --scrap-tape-blue: #5B9BD5;
+  --scrap-tape-green: #6B9E6B;
+  --scrap-tape-pink: #E8A0BF;
+  --scrap-tape-yellow: #D4A040;
+  --scrap-paper: #FFFCF5;
+  --scrap-ink: #2C1810;
+  --scrap-highlight: rgba(255 230 150 / 0.45);
+}
+
+/* -- Dark + Scrapbook -------------------------------------------------- */
+[data-mode="dark"][data-accent="scrapbook"] {
+  --bg-base: #1C1915;
+  --bg-elevated: #262220;
+  --bg-sunken: #141210;
+  --bg-muted: #2A2622;
+
+  --text-primary: #F0E6D8;
+  --text-secondary: #B8A898;
+  --text-tertiary: #7A6E64;
+  --text-inverse: #1C1915;
+
+  --accent: #E07060;
+  --accent-hover: #C94C4C;
+  --accent-soft: rgba(224 112 96 / 0.12);
+  --accent-muted: rgba(224 112 96 / 0.2);
+  --accent-glow: rgb(224 112 96 / 0.12);
+  --accent-gradient: linear-gradient(135deg, #E07060 0%, #D4A574 100%);
+  --accent-gradient-soft: linear-gradient(135deg, rgba(224 112 96 / 0.06) 0%, rgba(212 165 116 / 0.06) 100%);
+
+  --secondary: #70A8D0;
+  --secondary-soft: rgba(112 168 208 / 0.1);
+
+  --border: #3A3430;
+  --border-hover: #4A4240;
+  --border-accent: rgba(224 112 96 / 0.25);
+
+  --ring: #E07060;
+  --ring-offset: #1C1915;
+
+  --glass-bg: rgba(38 34 32 / 0.72);
+  --glass-border: rgba(240 230 216 / 0.06);
+  --glass-shadow: 0 8px 32px -8px rgb(224 112 96 / 0.05);
+
+  --card-bg: #262220;
+  --card-border: #3A3430;
+  --card-shadow: 0 2px 16px -2px rgb(0 0 0 / 0.3), 0 1px 4px -1px rgb(0 0 0 / 0.2);
+  --card-shadow-hover: 0 12px 32px -4px rgb(0 0 0 / 0.4), 0 4px 12px -2px rgb(0 0 0 / 0.25);
+
+  --nav-bg: rgba(28 25 21 / 0.9);
+  --nav-border: #3A3430;
+
+  --success: #7AAF7A;
+  --warning: #D4A040;
+  --error: #E07060;
+  --info: #70A8D0;
+
+  --skeleton-base: #3A3430;
+  --skeleton-shine: #4A4240;
+
+  --star-filled: #D4A040;
+  --star-empty: #4A4240;
+
+  --overlay: rgb(0 0 0 / 0.55);
+
+  --scrap-tape-blue: #70A8D0;
+  --scrap-tape-green: #7AAF7A;
+  --scrap-tape-pink: #C88AAA;
+  --scrap-tape-yellow: #D4A040;
+  --scrap-paper: #262220;
+  --scrap-ink: #F0E6D8;
+  --scrap-highlight: rgba(255 230 150 / 0.15);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -676,3 +804,130 @@ body {
     fill 0.3s var(--ease-smooth),
     stroke 0.3s var(--ease-smooth) !important;
 }
+
+
+/* =========================================================================
+   SCRAPBOOK THEME SPECIFIC STYLES
+   ========================================================================= */
+
+/* -- Polaroid Card Effect ------------------------------------------------ */
+.scrapbook-card {
+  border: 3px solid var(--scrap-paper) !important;
+  box-shadow: 0 2px 8px rgb(44 24 16 / 0.1), 0 0 0 1px var(--border) !important;
+  transform: rotate(-0.5deg);
+  position: relative;
+}
+
+.scrapbook-card:nth-child(2n) {
+  transform: rotate(0.8deg);
+}
+
+.scrapbook-card:nth-child(3n) {
+  transform: rotate(-1.2deg);
+}
+
+.scrapbook-card:hover {
+  transform: rotate(0deg) scale(1.02) !important;
+  box-shadow: 0 8px 24px rgb(44 24 16 / 0.15), 0 0 0 1px var(--border-hover) !important;
+}
+
+/* -- Washi Tape Decoration ----------------------------------------------- */
+.scrapbook-card::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 48px;
+  height: 14px;
+  border-radius: 2px;
+  z-index: 10;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.scrapbook-card:nth-child(4n+1)::before { background: var(--scrap-tape-blue); }
+.scrapbook-card:nth-child(4n+2)::before { background: var(--scrap-tape-pink); }
+.scrapbook-card:nth-child(4n+3)::before { background: var(--scrap-tape-green); }
+.scrapbook-card:nth-child(4n+4)::before { background: var(--scrap-tape-yellow); }
+
+/* -- Sticker Badge ------------------------------------------------------- */
+.scrapbook-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border: 1.5px solid currentColor;
+  transform: rotate(-3deg);
+  box-shadow: 1px 1px 3px rgb(0 0 0 / 0.1);
+}
+
+.scrapbook-sticker-movie { color: #667eea; background: rgba(102 126 234, 0.12); }
+.scrapbook-sticker-series { color: #43e97b; background: rgba(67 233 123, 0.12); }
+.scrapbook-sticker-anime { color: #fa709a; background: rgba(250 112 154, 0.12); }
+
+/* -- Hand-drawn Star (stamp effect) -------------------------------------- */
+[data-accent="scrapbook"] .star-stamp {
+  filter: url('#roughen');
+  opacity: 0.9;
+}
+
+/* -- Highlight Marker Effect --------------------------------------------- */
+.scrapbook-highlight {
+  background: var(--scrap-highlight);
+  padding: 0.1em 0.2em;
+  border-radius: 2px;
+}
+
+/* -- Paper Texture for Detail Sections ----------------------------------- */
+.scrapbook-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.scrapbook-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 0.75rem 0.75rem 0 0;
+}
+
+.scrapbook-section:nth-child(6n+1)::before { background: linear-gradient(90deg, #C94C4C, #D4A574); }
+.scrapbook-section:nth-child(6n+2)::before { background: linear-gradient(90deg, #D4A040, #E8C840); }
+.scrapbook-section:nth-child(6n+3)::before { background: linear-gradient(90deg, #5B9BD5, #70C8E0); }
+.scrapbook-section:nth-child(6n+4)::before { background: linear-gradient(90deg, #fa709a, #E8A0BF); }
+.scrapbook-section:nth-child(6n+5)::before { background: linear-gradient(90deg, #D4A574, #E8C8A0); }
+.scrapbook-section:nth-child(6n+6)::before { background: linear-gradient(90deg, #6B9E6B, #8BC88B); }
+
+/* -- Photo Frame for Related Works --------------------------------------- */
+.scrapbook-photo {
+  border: 4px solid var(--scrap-paper);
+  box-shadow: 2px 2px 8px rgb(0 0 0 / 0.12);
+  border-radius: 2px;
+  transition: transform 0.3s var(--ease-spring);
+}
+
+.scrapbook-photo:hover {
+  transform: scale(1.05) rotate(1deg);
+}
+
+/* -- Hero Section Scrapbook Style ---------------------------------------- */
+[data-accent="scrapbook"] .gradient-mesh {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(201 76 76, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(91 155 213, 0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(212 160 64, 0.06) 0%, transparent 50%);
+}
+

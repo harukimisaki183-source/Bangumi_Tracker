@@ -1,6 +1,6 @@
-# Bangumi_Tracker 云服务器部署文档
+﻿# Bangumi_Tracker 云服务器部署文档
 
-> 当前版本：v1.0.0 | 最后更新：2026-06-07
+> 当前版本：v1.1.0 | 最后更新：2026-06-08
 
 ## 服务器信息
 
@@ -405,3 +405,4 @@ mysql -u root -pbangumi2026 -e "SELECT 1;"
 ```
 
 同步更新 `frontend/src/components/NotificationBell.tsx` 中的版本号标签。
+

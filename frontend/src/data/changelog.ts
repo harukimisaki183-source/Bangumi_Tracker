@@ -6,7 +6,16 @@ export interface ChangelogEntry {
   type: 'feature' | 'fix' | 'improvement';
 }
 
+export const CURRENT_VERSION = 'v1.1.0';
+
 export const changelog: ChangelogEntry[] = [
+  {
+    id: 'v1.1.0',
+    date: '2026-06-08',
+    title: '设置中心与精美主题',
+    description: '新增设置面板，支持语言切换（中/英）和主题管理。新增手账拼贴精美主题，修复消息红点不消失的问题。',
+    type: 'feature',
+  },
   {
     id: 'v1.0.5',
     date: '2026-06-07',
