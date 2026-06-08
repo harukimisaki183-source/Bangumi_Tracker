@@ -183,7 +183,7 @@ export default function WorkCard({ work, index = 0 }: WorkCardProps) {
 
             {/* Rating badge */}
             <div
-              className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 text-xs font-bold"
+              className={`absolute top-3 ${isScrapbook ? "left-3" : "right-3"} flex items-center gap-1 px-2 py-1 text-xs font-bold`}
               style={{
                 fontFamily: "var(--font-display)",
                 borderRadius: isScrapbook ? "4px" : "var(--radius-pill)",
@@ -286,3 +286,5 @@ export default function WorkCard({ work, index = 0 }: WorkCardProps) {
     </motion.div>
   );
 }
+
+
