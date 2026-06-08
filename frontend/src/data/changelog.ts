@@ -6,9 +6,16 @@ export interface ChangelogEntry {
   type: 'feature' | 'fix' | 'improvement';
 }
 
-export const CURRENT_VERSION = 'v1.1.0';
+export const CURRENT_VERSION = 'v1.1.1';
 
 export const changelog: ChangelogEntry[] = [
+  {
+    id: 'v1.1.1',
+    date: '2026-06-08',
+    title: '社区帖子删除功能',
+    description: '作者可以在社区主页直接删除自己发布的帖子，删除后帖子及所有评论、点赞、收藏将永久清除。',
+    type: 'feature',
+  },
   {
     id: 'v1.1.0',
     date: '2026-06-08',
