@@ -10,6 +10,7 @@ export class UploadService {
   private publicEndpoint: string;
   private publicPort: string;
   private publicUseSSL: boolean;
+  private publicBaseUrl: string | null;
 
   constructor(private configService: ConfigService) {
     const endpoint = configService.get("MINIO_ENDPOINT", "localhost");
@@ -30,6 +31,7 @@ export class UploadService {
     this.publicEndpoint = configService.get("MINIO_PUBLIC_ENDPOINT", "localhost");
     this.publicPort = configService.get("MINIO_PORT", "9000");
     this.publicUseSSL = useSSL;
+    this.publicBaseUrl = configService.get("MINIO_PUBLIC_URL", null);
   }
 
   async ensureBucket() {
@@ -71,6 +73,9 @@ export class UploadService {
   }
 
   getPublicUrl(key: string) {
+    if (this.publicBaseUrl) {
+      return this.publicBaseUrl + "/" + this.bucket + "/" + key;
+    }
     const protocol = this.publicUseSSL ? "https" : "http";
     return protocol + "://" + this.publicEndpoint + ":" + this.publicPort + "/" + this.bucket + "/" + key;
   }
