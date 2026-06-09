@@ -15,6 +15,7 @@ interface WorkFormProps {
   };
   onSubmit: (data: any) => Promise<void>;
   submitLabel: string;
+  isEdit?: boolean;
 }
 
 const typeOptions = [
@@ -23,7 +24,7 @@ const typeOptions = [
   { value: "anime", label: "动漫" },
 ];
 
-export default function WorkForm({ initialData, onSubmit, submitLabel }: WorkFormProps) {
+export default function WorkForm({ initialData, onSubmit, submitLabel, isEdit }: WorkFormProps) {
   const [name, setName] = useState(initialData?.name || "");
   const [type, setType] = useState(initialData?.type || "anime");
   const [rating, setRating] = useState(initialData?.rating || 0);
@@ -71,7 +72,7 @@ export default function WorkForm({ initialData, onSubmit, submitLabel }: WorkFor
     if (rating < 1) { alert("请选择评分"); return; }
     if (!cover) { alert("请上传封面"); return; }
     setLoading(true);
-    try { await onSubmit({ name, type, rating, cover, description, url, tags }); }
+    try { await onSubmit({ name, type, rating, cover, description: isEdit ? initialData?.description || description : description, url, tags }); }
     finally { setLoading(false); }
   };
 
@@ -102,10 +103,12 @@ export default function WorkForm({ initialData, onSubmit, submitLabel }: WorkFor
           {rating > 0 && <span className="ml-2 text-sm text-gray-500">{rating} 星</span>}
         </div>
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">简介</label>
-        <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="作品简介（选填）" />
-      </div>
+      {!isEdit && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">简介</label>
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="作品简介（选填）" />
+        </div>
+      )}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">观看网址</label>
         <input value={url} onChange={(e) => setUrl(e.target.value)} className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="https://..." />

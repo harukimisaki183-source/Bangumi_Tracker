@@ -1,11 +1,12 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UploadService } from '../upload/upload.service';
+import { NotificationService } from './notification.service';
 import { CreatePostDto } from './dto/create-post.dto';
 
 @Injectable()
 export class PostService {
-  constructor(private prisma: PrismaService, private uploadService: UploadService) {}
+  constructor(private prisma: PrismaService, private uploadService: UploadService, private notificationService: NotificationService) {}
 
   async create(userId: number, dto: CreatePostDto) {
     if (dto.images && dto.images.length > 9) throw new HttpException('最多上传9张图片', HttpStatus.BAD_REQUEST);
@@ -56,6 +57,7 @@ export class PostService {
     const existing = await this.prisma.like.findUnique({ where: { user_id_post_id: { user_id: userId, post_id: postId } } });
     if (existing) { await this.prisma.like.delete({ where: { id: existing.id } }); return { liked: false }; }
     await this.prisma.like.create({ data: { user_id: userId, post_id: postId } });
+    this.notificationService.createLikeNotification(userId, postId).catch(() => {});
     return { liked: true };
   }
 

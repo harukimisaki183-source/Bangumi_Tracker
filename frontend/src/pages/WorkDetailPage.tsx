@@ -53,8 +53,33 @@ export default function WorkDetailPage() {
   }, [id, navigate]);
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success("链接已复制到剪贴板");
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          toast.success("链接已复制到剪贴板");
+        }).catch(() => fallbackCopy());
+      } else {
+        fallbackCopy();
+      }
+    } catch {
+      fallbackCopy();
+    }
+  };
+
+  const fallbackCopy = () => {
+    try {
+      const textarea = document.createElement('textarea');
+      textarea.value = window.location.href;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      toast.success("链接已复制到剪贴板");
+    } catch {
+      toast.error("复制失败，请手动复制地址栏链接");
+    }
   };
 
   const handleSave = async () => {

@@ -20,11 +20,13 @@ model User {
   created_at     DateTime  @default(now())
   updated_at     DateTime  @updatedAt
 
-  works     Work[]
-  posts     Post[]
-  comments  Comment[]
-  likes     Like[]
-  favorites Favorite[]
+  works         Work[]
+  posts         Post[]
+  comments      Comment[]
+  likes         Like[]
+  favorites     Favorite[]
+  notifications Notification[] @relation("user_notifications")
+  actor_actions Notification[] @relation("actor_notifications")
 }
 
 model Work {
@@ -57,17 +59,18 @@ model Tag {
 }
 
 model Post {
-  id         Int       @id @default(autoincrement())
-  content    String    @db.Text
-  images     Json?
-  author_id  Int
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
+  id            Int            @id @default(autoincrement())
+  content       String         @db.Text
+  images        Json?
+  author_id     Int
+  created_at    DateTime       @default(now())
+  updated_at    DateTime       @updatedAt
 
-  author    User      @relation(fields: [author_id], references: [id])
-  comments  Comment[]
-  likes     Like[]
-  favorites Favorite[]
+  author        User           @relation(fields: [author_id], references: [id])
+  comments      Comment[]
+  likes         Like[]
+  favorites     Favorite[]
+  notifications Notification[]
 
   @@index([author_id])
   @@index([created_at])
@@ -108,4 +111,22 @@ model Favorite {
   post Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
 
   @@unique([user_id, post_id])
+}
+
+model Notification {
+  id         Int      @id @default(autoincrement())
+  user_id    Int
+  type       String
+  message    String
+  is_read    Boolean  @default(false)
+  post_id    Int?
+  actor_id   Int?
+  created_at DateTime @default(now())
+
+  user  User  @relation("user_notifications", fields: [user_id], references: [id], onDelete: Cascade)
+  actor User? @relation("actor_notifications", fields: [actor_id], references: [id], onDelete: SetNull)
+  post  Post? @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@index([is_read])
 }

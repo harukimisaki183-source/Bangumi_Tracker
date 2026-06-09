@@ -203,6 +203,19 @@ export default function HomePage() {
           </motion.div>
         </div>
 
+        {/* ── Stats ─────────────────────────────────────────────── */}
+        <div className="max-w-7xl mx-auto px-4 mt-3">
+          <p className="text-xs" style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-body)' }}>
+            {activeTab === '' ? (
+              <>
+                共 {works.length} 部作品 · 电影 {works.filter(w => w.type === 'movie').length} · 剧集 {works.filter(w => w.type === 'series').length} · 番剧 {works.filter(w => w.type === 'anime').length}
+              </>
+            ) : (
+              <>共 {works.length} 部{tabs.find(t => t.value === activeTab)?.label}作品</>
+            )}
+          </p>
+        </div>
+
         {/* ── Masonry Card Grid ────────────────────────────────── */}
         <div className="max-w-7xl mx-auto px-4 py-10">
           {works.length === 0 && !isLoading ? (

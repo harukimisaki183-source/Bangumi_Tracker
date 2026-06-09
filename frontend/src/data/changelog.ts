@@ -6,9 +6,16 @@ export interface ChangelogEntry {
   type: 'feature' | 'fix' | 'improvement';
 }
 
-export const CURRENT_VERSION = 'v1.1.1';
+export const CURRENT_VERSION = 'v1.2.0';
 
 export const changelog: ChangelogEntry[] = [
+  {
+    id: 'v1.2.0',
+    date: '2026-06-09',
+    title: '消息系统优化与功能增强',
+    description: '优化消息通知系统，版本更新显示为摘要通知，点击查看详情；新增帖子点赞和评论的实时通知；修复分享按钮剪贴板复制失败的问题；首页新增作品统计信息；编辑详情移除冗余的内容简介板块。',
+    type: 'feature',
+  },
   {
     id: 'v1.1.1',
     date: '2026-06-08',

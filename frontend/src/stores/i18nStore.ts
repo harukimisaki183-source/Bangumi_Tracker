@@ -50,6 +50,11 @@ const zh = {
   'notification.feature': '新功能',
   'notification.fix': '修复',
   'notification.improvement': '优化',
+  'notification.official': '官方',
+  'notification.versionUpdate': '版本更新通知',
+  'notification.markAllRead': '全部已读',
+  'notification.noNotifications': '暂无新消息',
+  'notification.viewChangelog': '查看更新日志',
 
   // Home
   'home.hero.title': '追番记录站',
@@ -138,6 +143,11 @@ const en: Record<keyof typeof zh, string> = {
   'notification.feature': 'Feature',
   'notification.fix': 'Fix',
   'notification.improvement': 'Improvement',
+  'notification.official': 'Official',
+  'notification.versionUpdate': 'Version Update',
+  'notification.markAllRead': 'Mark All Read',
+  'notification.noNotifications': 'No new notifications',
+  'notification.viewChangelog': 'View Changelog',
 
   // Home
   'home.hero.title': 'Bangumi Tracker',

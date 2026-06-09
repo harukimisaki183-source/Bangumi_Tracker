@@ -49,6 +49,7 @@ export default function WorkEditPage() {
         }}
         onSubmit={handleSubmit}
         submitLabel="保存修改"
+        isEdit={true}
       />
     </div>
   );
