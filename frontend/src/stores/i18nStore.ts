@@ -108,6 +108,11 @@ const zh = {
   'home.empty.title': '还没有作品',
   'home.empty.subtitle': '创建你的第一个作品，开始记录观影旅程',
   'home.empty.cta': '去创建第一个作品 →',
+  'home.stats.total': '共 {count} 部作品',
+  'home.stats.movie': '电影 {count}',
+  'home.stats.series': '剧集 {count}',
+  'home.stats.anime': '番剧 {count}',
+  'home.stats.filtered': '共 {count} 部{type}作品',
 
   // Types
   'type.movie': '电影',
@@ -241,6 +246,11 @@ const en: Record<keyof typeof zh, string> = {
   'home.empty.title': 'No works yet',
   'home.empty.subtitle': 'Create your first work and start tracking your viewing journey',
   'home.empty.cta': 'Create your first work →',
+  'home.stats.total': '{count} works total',
+  'home.stats.movie': 'Movie {count}',
+  'home.stats.series': 'Series {count}',
+  'home.stats.anime': 'Anime {count}',
+  'home.stats.filtered': '{count} {type} works',
 
   // Types
   'type.movie': 'Movie',

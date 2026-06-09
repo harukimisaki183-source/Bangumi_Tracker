@@ -210,10 +210,10 @@ export default function HomePage() {
           <p className="text-xs" style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-body)' }}>
             {activeTab === '' ? (
               <>
-                共 {works.length} 部作品 · 电影 {works.filter(w => w.type === 'movie').length} · 剧集 {works.filter(w => w.type === 'series').length} · 番剧 {works.filter(w => w.type === 'anime').length}
+                {t('home.stats.total', { count: works.length })} · {t('home.stats.movie', { count: works.filter(w => w.type === 'movie').length })} · {t('home.stats.series', { count: works.filter(w => w.type === 'series').length })} · {t('home.stats.anime', { count: works.filter(w => w.type === 'anime').length })}
               </>
             ) : (
-              <>共 {works.length} 部{tabs.find(t => t.value === activeTab)?.label}作品</>
+              <>{t('home.stats.filtered', { count: works.length, type: tabs.find(tab => tab.value === activeTab)?.label || '' })}</>
             )}
           </p>
         </div>
