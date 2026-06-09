@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/stores/authStore';
+import { useTranslation } from '@/stores/i18nStore';
 import AuthLayout, { itemVariants } from '@/components/AuthLayout';
 import api from '@/lib/api';
 
@@ -16,6 +17,7 @@ export default function RegisterPage() {
   const [focusField, setFocusField] = useState<string | null>(null);
   const register = useAuthStore((s) => s.register);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (countdown <= 0) return;
@@ -24,28 +26,28 @@ export default function RegisterPage() {
   }, [countdown]);
 
   const handleSendCode = async () => {
-    if (!email) { toast.error('请先填写邮箱'); return; }
+    if (!email) { toast.error(t('register.fillEmail')); return; }
     try {
       await api.post('/auth/send-code', { email });
-      toast.success('验证码已发送');
+      toast.success(t('register.codeSent'));
       setCountdown(60);
     } catch (err: any) {
-      toast.error(err.response?.data?.message || '发送失败');
+      toast.error(err.response?.data?.message || t('register.sendFailed'));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password || !code) { toast.error('请填写所有必填项'); return; }
-    if (password !== confirmPassword) { toast.error('两次密码不一致'); return; }
-    if (password.length < 8) { toast.error('密码至少需要8个字符'); return; }
+    if (!email || !password || !code) { toast.error(t('register.fillAll')); return; }
+    if (password !== confirmPassword) { toast.error(t('register.passwordMismatch')); return; }
+    if (password.length < 8) { toast.error(t('register.passwordTooShort')); return; }
     setLoading(true);
     try {
       await register(email, password, code);
-      toast.success('注册成功');
+      toast.success(t('register.success'));
       navigate('/');
     } catch (err: any) {
-      toast.error(err.response?.data?.message || '注册失败');
+      toast.error(err.response?.data?.message || t('register.failed'));
     } finally {
       setLoading(false);
     }
@@ -57,7 +59,7 @@ export default function RegisterPage() {
   });
 
   return (
-    <AuthLayout title="创建账号" subtitle="开始记录你的观影旅程">
+    <AuthLayout title={t('register.title')} subtitle={t('register.subtitle')}>
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email */}
         <motion.div variants={itemVariants}>
@@ -65,7 +67,7 @@ export default function RegisterPage() {
             className="block text-[0.8rem] font-medium mb-2 tracking-wide"
             style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-display)' }}
           >
-            邮箱
+            {t('register.email')}
           </label>
           <input
             type="email"
@@ -86,7 +88,7 @@ export default function RegisterPage() {
             className="block text-[0.8rem] font-medium mb-2 tracking-wide"
             style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-display)' }}
           >
-            验证码
+            {t('register.code')}
           </label>
           <div className="flex gap-2.5">
             <input
@@ -98,7 +100,7 @@ export default function RegisterPage() {
               maxLength={6}
               className="input-field flex-1"
               style={fieldStyle('code')}
-              placeholder="6位验证码"
+              placeholder={t('register.codePlaceholder')}
               autoComplete="one-time-code"
             />
             <motion.button
@@ -108,7 +110,7 @@ export default function RegisterPage() {
               className="btn-ghost whitespace-nowrap text-[0.8rem] disabled:opacity-40 disabled:cursor-not-allowed"
               whileTap={{ scale: 0.97 }}
             >
-              {countdown > 0 ? `${countdown}s` : '发送'}
+              {countdown > 0 ? `${countdown}s` : t('register.sendCode')}
             </motion.button>
           </div>
         </motion.div>
@@ -119,7 +121,7 @@ export default function RegisterPage() {
             className="block text-[0.8rem] font-medium mb-2 tracking-wide"
             style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-display)' }}
           >
-            密码
+            {t('register.password')}
           </label>
           <input
             type="password"
@@ -129,7 +131,7 @@ export default function RegisterPage() {
             onBlur={() => setFocusField(null)}
             className="input-field w-full"
             style={fieldStyle('password')}
-            placeholder="至少8个字符"
+            placeholder={t('register.passwordPlaceholder')}
             autoComplete="new-password"
           />
         </motion.div>
@@ -140,7 +142,7 @@ export default function RegisterPage() {
             className="block text-[0.8rem] font-medium mb-2 tracking-wide"
             style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-display)' }}
           >
-            确认密码
+            {t('register.confirmPassword')}
           </label>
           <input
             type="password"
@@ -150,7 +152,7 @@ export default function RegisterPage() {
             onBlur={() => setFocusField(null)}
             className="input-field w-full"
             style={fieldStyle('confirm')}
-            placeholder="再次输入密码"
+            placeholder={t('register.confirmPasswordPlaceholder')}
             autoComplete="new-password"
           />
         </motion.div>
@@ -164,7 +166,7 @@ export default function RegisterPage() {
             whileHover={{ scale: loading ? 1 : 1.01 }}
             whileTap={{ scale: loading ? 1 : 0.98 }}
           >
-            {loading ? '注册中...' : '创建账号'}
+            {loading ? t('register.registering') : t('register.submit')}
           </motion.button>
         </motion.div>
 
@@ -174,13 +176,13 @@ export default function RegisterPage() {
             className="text-center text-[0.8rem]"
             style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-body)' }}
           >
-            已有账号？{' '}
+            {t('register.hasAccount')}{' '}
             <Link
               to="/login"
               className="font-medium transition-colors"
               style={{ color: 'var(--accent)' }}
             >
-              登录
+              {t('register.login')}
             </Link>
           </p>
         </motion.div>

@@ -40,6 +40,8 @@ export default function WorkEditPage() {
         initialData={{
           name: work.name,
           type: work.type,
+          subtype: work.subtype || '',
+          region: work.region || '',
           rating: work.rating,
           cover: work.cover,
           cover_url: work.cover_url,

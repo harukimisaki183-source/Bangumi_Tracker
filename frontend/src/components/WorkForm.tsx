@@ -6,6 +6,8 @@ interface WorkFormProps {
   initialData?: {
     name: string;
     type: string;
+    subtype?: string;
+    region?: string;
     rating: number;
     cover: string;
     cover_url: string;
@@ -24,9 +26,34 @@ const typeOptions = [
   { value: "anime", label: "动漫" },
 ];
 
+const subtypeOptions: Record<string, { value: string; label: string }[]> = {
+  movie: [
+    { value: "original", label: "原创" },
+    { value: "remake", label: "翻拍" },
+    { value: "manga", label: "漫改" },
+    { value: "novel", label: "小说改" },
+    { value: "documentary", label: "纪实" },
+  ],
+  series: [
+    { value: "original", label: "原创" },
+    { value: "remake", label: "翻拍" },
+    { value: "manga", label: "漫改" },
+    { value: "novel", label: "小说改" },
+  ],
+};
+
+const regionOptions = [
+  { value: "europe_us", label: "欧美" },
+  { value: "japan_korea", label: "日韩" },
+  { value: "china_mainland", label: "中国大陆" },
+  { value: "china_hk_tw", label: "中国港台地区" },
+];
+
 export default function WorkForm({ initialData, onSubmit, submitLabel, isEdit }: WorkFormProps) {
   const [name, setName] = useState(initialData?.name || "");
   const [type, setType] = useState(initialData?.type || "anime");
+  const [subtype, setSubtype] = useState(initialData?.subtype || "");
+  const [region, setRegion] = useState(initialData?.region || "");
   const [rating, setRating] = useState(initialData?.rating || 0);
   const [cover, setCover] = useState(initialData?.cover || "");
   const [coverUrl, setCoverUrl] = useState(initialData?.cover_url || "");
@@ -71,8 +98,9 @@ export default function WorkForm({ initialData, onSubmit, submitLabel, isEdit }:
     if (!name.trim()) { alert("请输入名称"); return; }
     if (rating < 1) { alert("请选择评分"); return; }
     if (!cover) { alert("请上传封面"); return; }
+    if (!region) { alert("请选择地区"); return; }
     setLoading(true);
-    try { await onSubmit({ name, type, rating, cover, description: isEdit ? initialData?.description || description : description, url, tags }); }
+    try { await onSubmit({ name, type, subtype: subtype || undefined, region, rating, cover, description: isEdit ? initialData?.description || description : description, url, tags }); }
     finally { setLoading(false); }
   };
 
@@ -93,7 +121,21 @@ export default function WorkForm({ initialData, onSubmit, submitLabel, isEdit }:
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">类型 *</label>
         <div className="flex gap-3">
-          {typeOptions.map((opt) => (<button key={opt.value} type="button" onClick={() => setType(opt.value)} className={"px-4 py-2 rounded-lg border text-sm font-medium transition-colors " + (type === opt.value ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-gray-700 hover:border-indigo-400")}>{opt.label}</button>))}
+          {typeOptions.map((opt) => (<button key={opt.value} type="button" onClick={() => { setType(opt.value); setSubtype(""); }} className={"px-4 py-2 rounded-lg border text-sm font-medium transition-colors " + (type === opt.value ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-gray-700 hover:border-indigo-400")}>{opt.label}</button>))}
+        </div>
+      </div>
+      {subtypeOptions[type] && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">子类型</label>
+          <div className="flex flex-wrap gap-2">
+            {subtypeOptions[type].map((opt) => (<button key={opt.value} type="button" onClick={() => setSubtype(subtype === opt.value ? "" : opt.value)} className={"px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors " + (subtype === opt.value ? "bg-indigo-100 text-indigo-700 border-indigo-300" : "bg-white text-gray-600 hover:border-indigo-300")}>{opt.label}</button>))}
+          </div>
+        </div>
+      )}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">地区 *</label>
+        <div className="flex flex-wrap gap-2">
+          {regionOptions.map((opt) => (<button key={opt.value} type="button" onClick={() => setRegion(opt.value)} className={"px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors " + (region === opt.value ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-gray-600 hover:border-indigo-300")}>{opt.label}</button>))}
         </div>
       </div>
       <div>

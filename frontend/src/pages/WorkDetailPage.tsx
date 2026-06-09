@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
   Star, Edit, Share2, ArrowLeft, Film, Tv, Sparkles, Save, X, Trash2,
   BookOpen, MessageSquareText, FileText, ListChecks, Clapperboard, Link2,
+  Users, Camera, Upload,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -16,6 +17,8 @@ import SynopsisSection from "@/components/detail/SynopsisSection";
 import EpisodesSection from "@/components/detail/EpisodesSection";
 import ProductionBackgroundSection from "@/components/detail/ProductionBackgroundSection";
 import RelatedWorksSection from "@/components/detail/RelatedWorksSection";
+import CharactersSection from "@/components/detail/CharactersSection";
+import StillsSection from "@/components/detail/StillsSection";
 
 const typeLabels: Record<string, string> = { movie: "电影", series: "剧集", anime: "动漫" };
 const typeGradients: Record<string, string> = {
@@ -132,6 +135,8 @@ export default function WorkDetailPage() {
   const sections = [
     { key: "basic_info", icon: <BookOpen className="w-4 h-4" />, title: "基本信息", accent: "#667eea",
       content: <BasicInfoSection data={detailContent.basic_info} isEditing={isEditing} onChange={(v) => updateDC("basic_info", v)} /> },
+    { key: "characters", icon: <Users className="w-4 h-4" />, title: "主要角色", accent: "#E879A8",
+      content: <CharactersSection data={detailContent.characters} isEditing={isEditing} onChange={(v) => updateDC("characters", v)} /> },
     { key: "rating_reason", icon: <MessageSquareText className="w-4 h-4" />, title: "评分理由", accent: "#FBBF24",
       content: <RatingReasonSection data={detailContent.rating_reason} isEditing={isEditing} onChange={(v) => updateDC("rating_reason", v)} /> },
     { key: "synopsis", icon: <FileText className="w-4 h-4" />, title: "内容简介", accent: "#4ECDC4",
@@ -140,6 +145,8 @@ export default function WorkDetailPage() {
       content: <EpisodesSection data={detailContent.episodes} isEditing={isEditing} onChange={(v) => updateDC("episodes", v)} /> },
     { key: "production_background", icon: <Clapperboard className="w-4 h-4" />, title: "制作背景", accent: "#FFB347",
       content: <ProductionBackgroundSection data={detailContent.production_background} isEditing={isEditing} onChange={(v) => updateDC("production_background", v)} /> },
+    { key: "stills", icon: <Camera className="w-4 h-4" />, title: "相关剧照", accent: "#9B59B6",
+      content: <StillsSection data={detailContent.stills} isEditing={isEditing} onChange={(v) => updateDC("stills", v)} /> },
     { key: "related_works", icon: <Link2 className="w-4 h-4" />, title: "相关作品", accent: "#A8E6CF",
       content: <RelatedWorksSection workIds={detailContent.related_work_ids || []} relatedWorks={work.related_works || []} isEditing={isEditing} onChange={(v) => updateDC("related_work_ids", v)} /> },
   ];

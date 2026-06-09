@@ -26,9 +26,16 @@ export default function MainLayout() {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
   const handleLogout = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
     logout();
     setMobileMenuOpen(false);
+    setShowLogoutConfirm(false);
     navigate("/login");
   };
 
@@ -270,6 +277,56 @@ export default function MainLayout() {
           {t("footer.copyright")}
         </p>
       </footer>
+
+      <AnimatePresence>
+        {showLogoutConfirm && (
+          <motion.div
+            className="fixed inset-0 z-[100] flex items-center justify-center px-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="absolute inset-0"
+              style={{ background: "var(--overlay)" }}
+              onClick={() => setShowLogoutConfirm(false)}
+            />
+            <motion.div
+              className="relative glass-strong p-6 w-full max-w-sm"
+              style={{ borderRadius: "var(--radius-glass)" }}
+              initial={{ opacity: 0, scale: 0.95, y: 12 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 12 }}
+              transition={{ type: "spring", stiffness: 300, damping: 28 }}
+            >
+              <h3 className="heading-section text-base mb-2" style={{ color: "var(--text-primary)" }}>
+                {t("nav.logout")}
+              </h3>
+              <p className="text-sm mb-6" style={{ color: "var(--text-secondary)" }}>
+                {t("logout.confirmMessage")}
+              </p>
+              <div className="flex gap-3 justify-end">
+                <motion.button
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="btn-ghost text-sm"
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {t("detail.cancel")}
+                </motion.button>
+                <motion.button
+                  onClick={confirmLogout}
+                  className="px-4 py-2 rounded-xl text-sm font-medium"
+                  style={{ background: "var(--error)", color: "white", fontFamily: "var(--font-display)" }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {t("nav.logout")}
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

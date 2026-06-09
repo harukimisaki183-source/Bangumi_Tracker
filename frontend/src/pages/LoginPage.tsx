@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { useAuthStore } from '@/stores/authStore';
+import { useTranslation } from '@/stores/i18nStore';
 import AuthLayout, { itemVariants } from '@/components/AuthLayout';
 
 export default function LoginPage() {
@@ -12,24 +13,25 @@ export default function LoginPage() {
   const [focusField, setFocusField] = useState<string | null>(null);
   const login = useAuthStore((s) => s.login);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) { toast.error('请填写邮箱和密码'); return; }
+    if (!email || !password) { toast.error(t('login.fillAll')); return; }
     setLoading(true);
     try {
       await login(email, password);
-      toast.success('登录成功');
+      toast.success(t('login.success'));
       navigate('/');
     } catch (err: any) {
-      toast.error(err.response?.data?.message || '登录失败');
+      toast.error(err.response?.data?.message || t('login.failed'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <AuthLayout title="欢迎回来" subtitle="登录以继续记录你的观影旅程">
+    <AuthLayout title={t('login.title')} subtitle={t('login.subtitle')}>
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Email */}
         <motion.div variants={itemVariants}>
@@ -37,7 +39,7 @@ export default function LoginPage() {
             className="block text-[0.8rem] font-medium mb-2 tracking-wide"
             style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-display)' }}
           >
-            邮箱
+            {t('login.email')}
           </label>
           <input
             type="email"
@@ -62,7 +64,7 @@ export default function LoginPage() {
               className="block text-[0.8rem] font-medium tracking-wide"
               style={{ color: 'var(--text-secondary)', fontFamily: 'var(--font-display)' }}
             >
-              密码
+              {t('login.password')}
             </label>
             <Link
               to="/forgot-password"
@@ -71,7 +73,7 @@ export default function LoginPage() {
               onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
               onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-tertiary)')}
             >
-              忘记密码？
+              {t('login.forgotPassword')}
             </Link>
           </div>
           <input
@@ -85,7 +87,7 @@ export default function LoginPage() {
               borderColor: focusField === 'password' ? 'var(--accent)' : undefined,
               boxShadow: focusField === 'password' ? '0 0 0 3px var(--accent-glow)' : undefined,
             }}
-            placeholder="输入密码"
+            placeholder={t('login.passwordPlaceholder')}
             autoComplete="current-password"
           />
         </motion.div>
@@ -99,7 +101,7 @@ export default function LoginPage() {
             whileHover={{ scale: loading ? 1 : 1.01 }}
             whileTap={{ scale: loading ? 1 : 0.98 }}
           >
-            {loading ? '登录中...' : '登录'}
+            {loading ? t('login.loggingIn') : t('login.submit')}
           </motion.button>
         </motion.div>
 
@@ -109,13 +111,13 @@ export default function LoginPage() {
             className="text-center text-[0.8rem]"
             style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-body)' }}
           >
-            还没有账号？{' '}
+            {t('login.noAccount')}{' '}
             <Link
               to="/register"
               className="font-medium transition-colors"
               style={{ color: 'var(--accent)' }}
             >
-              创建账号
+              {t('login.createAccount')}
             </Link>
           </p>
         </motion.div>

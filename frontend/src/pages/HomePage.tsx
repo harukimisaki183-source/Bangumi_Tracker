@@ -4,20 +4,22 @@ import { Plus, Search } from 'lucide-react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { useWorkStore } from '@/stores/workStore';
 import { useAuthStore } from '@/stores/authStore';
+import { useTranslation } from '@/stores/i18nStore';
 import WorkCard from '@/components/WorkCard';
 import WorkCardSkeleton from '@/components/WorkCardSkeleton';
-
-const tabs = [
-  { value: '', label: '全部', emoji: '✨' },
-  { value: 'movie', label: '电影', emoji: '🎬' },
-  { value: 'series', label: '剧集', emoji: '📺' },
-  { value: 'anime', label: '动漫', emoji: '🌸' },
-];
 
 export default function HomePage() {
   const { works, isLoading, nextCursor, filters, fetchWorks, loadMore, setFilters } =
     useWorkStore();
   const { isAuthenticated, user } = useAuthStore();
+  const { t } = useTranslation();
+
+  const tabs = [
+    { value: '', label: t('home.tab.all'), emoji: '✨' },
+    { value: 'movie', label: t('home.tab.movie'), emoji: '🎬' },
+    { value: 'series', label: t('home.tab.series'), emoji: '📺' },
+    { value: 'anime', label: t('home.tab.anime'), emoji: '🌸' },
+  ];
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState(filters.type || '');
@@ -91,7 +93,7 @@ export default function HomePage() {
                 className="heading-display text-4xl md:text-5xl mb-3"
                 style={{ color: 'var(--text-primary)' }}
               >
-                追番记录站
+                {t('home.hero.title')}
               </h1>
               <p
                 className="text-lg max-w-md"
@@ -101,7 +103,7 @@ export default function HomePage() {
                   lineHeight: 1.6,
                 }}
               >
-                记录每一次心动的观影体验，发现属于你的作品宇宙
+                {t('home.hero.subtitle')}
               </p>
             </motion.div>
           </div>
@@ -165,7 +167,7 @@ export default function HomePage() {
                   className="btn-accent flex items-center gap-1.5 shrink-0 sm:ml-auto text-sm py-2 px-3"
                 >
                   <Plus className="w-4 h-4" />
-                  <span className="hidden sm:inline">创建作品</span>
+                  <span className="hidden sm:inline">{t('home.create')}</span>
                 </Link>
               )}
             </div>
@@ -184,7 +186,7 @@ export default function HomePage() {
               />
               <input
                 onChange={(e) => handleSearch(e.target.value)}
-                placeholder="搜索作品..."
+                placeholder={t('home.search')}
                 onFocus={() => setSearchFocused(true)}
                 onBlur={() => setSearchFocused(false)}
                 className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl transition-all"
@@ -240,17 +242,17 @@ export default function HomePage() {
                 className="text-lg mb-2 heading-section"
                 style={{ color: 'var(--text-secondary)' }}
               >
-                还没有作品
+                {t('home.empty.title')}
               </p>
               <p
                 className="text-sm mb-6"
                 style={{ color: 'var(--text-tertiary)' }}
               >
-                创建你的第一个作品，开始记录观影旅程
+                {t('home.empty.subtitle')}
               </p>
               {isAuthenticated && (
                 <Link to="/works/create" className="btn-accent">
-                  去创建第一个作品 →
+                  {t('home.empty.cta')}
                 </Link>
               )}
             </motion.div>

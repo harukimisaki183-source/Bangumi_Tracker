@@ -6,9 +6,16 @@ export interface ChangelogEntry {
   type: 'feature' | 'fix' | 'improvement';
 }
 
-export const CURRENT_VERSION = 'v1.2.0';
+export const CURRENT_VERSION = 'v1.3.0';
 
 export const changelog: ChangelogEntry[] = [
+  {
+    id: 'v1.3.0',
+    date: '2026-06-09',
+    title: '国际化增强、角色卡片与剧照功能',
+    description: '修复首页和表单的国际化问题，登录注册页面新增语言切换；登出时弹出确认对话框；创建作品新增子类型和地区选择；编辑详情新增角色卡片（支持图片上传）和相关剧照板块；主要角色从基本信息中独立为单独板块。',
+    type: 'feature',
+  },
   {
     id: 'v1.2.0',
     date: '2026-06-09',

@@ -20,7 +20,6 @@ const fieldLabels: Record<string, string> = {
   episodes: '集数',
   status: '状态',
   actors: '演员',
-  characters: '主要角色',
 };
 
 export default function BasicInfoSection({

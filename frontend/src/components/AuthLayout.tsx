@@ -1,6 +1,7 @@
-import { Film } from 'lucide-react';
+import { Film, Globe } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useI18nStore, useTranslation } from '@/stores/i18nStore';
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -26,8 +27,27 @@ const itemVariants = {
 };
 
 export default function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
+  const { lang, setLang } = useI18nStore();
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Language switcher — top right */}
+      <motion.button
+        onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+        className="absolute top-4 right-4 z-20 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors"
+        style={{
+          background: 'var(--glass-bg)',
+          border: '1px solid var(--glass-border)',
+          color: 'var(--text-secondary)',
+          fontFamily: 'var(--font-display)',
+        }}
+        whileHover={{ scale: 1.05, color: 'var(--accent)' }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Globe className="w-3.5 h-3.5" />
+        {lang === 'zh' ? 'EN' : '中文'}
+      </motion.button>
       {/* Background: subtle gradient mesh — not noisy, just atmospheric */}
       <div className="absolute inset-0 gradient-mesh" />
 
@@ -92,7 +112,7 @@ export default function AuthLayout({ children, title, subtitle }: AuthLayoutProp
               className="heading-section text-xl tracking-tight"
               style={{ color: 'var(--text-primary)' }}
             >
-              追番记录站
+              {t('nav.siteName')}
             </span>
           </Link>
         </motion.div>
@@ -156,7 +176,7 @@ export default function AuthLayout({ children, title, subtitle }: AuthLayoutProp
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
         >
-          © 2026 追番记录站
+          © 2026 Bangumi Tracker
         </motion.p>
       </motion.div>
     </div>
