@@ -187,14 +187,16 @@ export default function NotificationBell() {
 
               {/* Notification list */}
               <div className="max-h-96 overflow-y-auto">
-                {/* Version update notification */}
-                {hasVersionUpdate && (
+                {/* Version update notification - always shown, pinned at top */}
                   <div
                     className="px-4 py-3 cursor-pointer transition-colors"
-                    style={{ borderBottom: "1px solid var(--border)" }}
+                    style={{
+                      borderBottom: "1px solid var(--border)",
+                      background: hasVersionUpdate ? "color-mix(in srgb, var(--accent) 4%, transparent)" : "transparent",
+                    }}
                     onClick={handleVersionClick}
                     onMouseEnter={(e) => (e.currentTarget.style.background = "var(--hover-bg, rgba(0,0,0,0.03))")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = hasVersionUpdate ? "color-mix(in srgb, var(--accent) 4%, transparent)" : "transparent")}
                   >
                     <div className="flex items-start gap-3">
                       <div
@@ -222,9 +224,14 @@ export default function NotificationBell() {
                           {CURRENT_VERSION} — {changelog[0]?.title}
                         </p>
                       </div>
+                      {hasVersionUpdate && (
+                        <div
+                          className="w-2 h-2 rounded-full shrink-0 mt-2"
+                          style={{ background: "var(--accent)" }}
+                        />
+                      )}
                     </div>
                   </div>
-                )}
 
                 {/* Backend notifications */}
                 {backendNotifications.map((notification) => (
@@ -273,7 +280,7 @@ export default function NotificationBell() {
                 ))}
 
                 {/* Empty state */}
-                {!hasVersionUpdate && backendNotifications.length === 0 && (
+                {backendNotifications.length === 0 && (
                   <div className="px-4 py-8 text-center">
                     <Bell className="w-8 h-8 mx-auto mb-2" style={{ color: "var(--text-tertiary)", opacity: 0.4 }} />
                     <p className="text-sm" style={{ color: "var(--text-tertiary)" }}>
