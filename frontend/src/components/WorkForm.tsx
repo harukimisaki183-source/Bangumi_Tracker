@@ -40,6 +40,11 @@ const subtypeOptions: Record<string, { value: string; label: string }[]> = {
     { value: "manga", label: "漫改" },
     { value: "novel", label: "小说改" },
   ],
+  anime: [
+    { value: "original", label: "原创" },
+    { value: "manga", label: "漫改" },
+    { value: "novel", label: "小说改" },
+  ],
 };
 
 const regionOptions = [

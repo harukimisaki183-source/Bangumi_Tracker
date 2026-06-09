@@ -6,9 +6,16 @@ export interface ChangelogEntry {
   type: 'feature' | 'fix' | 'improvement';
 }
 
-export const CURRENT_VERSION = 'v1.3.0';
+export const CURRENT_VERSION = 'v1.3.2';
 
 export const changelog: ChangelogEntry[] = [
+  {
+    id: 'v1.3.2',
+    date: '2026-06-09',
+    title: '动漫子类型补充',
+    description: '为动漫类型新增子类型选项：原创、漫改、小说改。',
+    type: 'fix',
+  },
   {
     id: 'v1.3.0',
     date: '2026-06-09',
